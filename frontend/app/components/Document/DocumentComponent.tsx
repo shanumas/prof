@@ -49,6 +49,21 @@ const DocumentComponent: React.FC<DocumentComponentProps> = ({
 
   const chunkRef = useRef<null | HTMLDivElement>(null);
 
+  // Function to extract the src URL
+  const extractSrc = (text: string) => {
+    const urlRegex = /https?:\/\/[^\s]+/;
+    const match = text.match(urlRegex);
+
+    // The extracted link
+    let link = match ? match[0] : "No link found";
+    link = link.replace(/,$/, '');
+    return link;
+  };
+
+  const srcLink = formattedDocument
+    ? extractSrc(formattedDocument.substring)
+    : "";
+
   useEffect(() => {
     if (selectedChunk != null && APIhost != null) {
       fetchDocuments();
@@ -153,7 +168,7 @@ const DocumentComponent: React.FC<DocumentComponentProps> = ({
         <div className="flex justify-between">
           <div className="flex flex-col">
             <p className="sm:text-sm md:text-lg font-semibold">
-              {currentDocument.name}
+              {srcLink}
             </p>
             <p className="sm:text-xs md:text-sm text-text-alt-verba">
               {currentDocument.type}
@@ -242,13 +257,17 @@ const DocumentComponent: React.FC<DocumentComponentProps> = ({
                 ref={chunkRef}
                 className=" border-secondary-verba border-2 rounded-lg shadow-lg flex gap-2 flex-col p-3"
               >
-                <div className="flex w-1/3">
-                  <div
-                    className={`p-2 flex gap-1 rounded-lg text-text-verba text-sm bg-secondary-verba }`}
-                  >
-                    <HiMiniSparkles />
-                    <p className={`text-xs text-text-verba}`}>Context Used</p>
-                  </div>
+
+                <div className="">
+                  {{srcLink} ? (
+                    <iframe
+                      src={srcLink}
+                      title="Extracted Link"
+                      style={{ width: "100%", height: "100vh", border: "none" }}
+                    />
+                  ) : (
+                    <p>No link found.</p>
+                  )}
                 </div>
                 <ReactMarkdown
                   className="prose md:prose-base sm:prose-sm p-3 prose-pre:bg-bg-alt-verba"
