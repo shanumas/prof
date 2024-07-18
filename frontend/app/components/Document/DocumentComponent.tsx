@@ -56,7 +56,7 @@ const DocumentComponent: React.FC<DocumentComponentProps> = ({
 
     // The extracted link
     let link = match ? match[0] : "No link found";
-    link = link.replace(/,$/, '');
+    link = link.replace(/,$/, "");
     return link;
   };
 
@@ -165,173 +165,34 @@ const DocumentComponent: React.FC<DocumentComponentProps> = ({
     return (
       <div className="flex flex-col bg-bg-alt-verba rounded-lg shadow-lg p-5 text-text-verba gap-5 sm:h-[53.5vh] lg:h-[65vh] overflow-auto">
         {/*Title*/}
-        <div className="flex justify-between">
+        <div className="flex justify-between border-secondary-verba">
           <div className="flex flex-col">
-            <p className="sm:text-sm md:text-lg font-semibold">
+            <a
+              className="sm:text-sm md:text-lg font-semibold"
+              href={srcLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none", color: "blue" }}
+            >
               {srcLink}
-            </p>
+            </a>
             <p className="sm:text-xs md:text-sm text-text-alt-verba">
               {currentDocument.type}
             </p>
           </div>
-          <div className="flex gap-3">
-            {formattedDocument && formattedDocument.substring !== "" && (
-              <div className="flex">
-                <button
-                  onClick={handleDocumentShow}
-                  className="btn border-none text-text-verba bg-button-verba hover:bg-button-hover-verba flex gap-2"
-                >
-                  <MdOutlineSimCardDownload />
-                  <p className="sm:hidden md:flex text-xs text-text-verba">
-                    {showWholeDocument
-                      ? "Show Only Context"
-                      : "Show Whole Document"}
-                  </p>
-                </button>
-              </div>
-            )}
-            {currentDocument.link !== "" && (
-              <div className="flex">
-                <button
-                  onClick={handleSourceClick}
-                  className="btn border-none text-text-verba bg-button-verba hover:bg-button-hover-verba flex gap-2"
-                >
-                  <FaExternalLinkAlt />
-                  <p className="sm:hidden md:flex text-xs text-text-verba">
-                    Go To Source
-                  </p>
-                </button>
-              </div>
-            )}
-            {deletable && !production && (
-              <div className="flex">
-                <button
-                  onClick={openDeleteModal}
-                  className="btn border-none text-text-verba bg-warning-verba hover:bg-button-hover-verba flex gap-2"
-                >
-                  <MdDelete />
-                  <p className="sm:hidden md:flex text-xs text-text-verba">
-                    Delete Document
-                  </p>
-                </button>
-              </div>
-            )}
-          </div>
         </div>
 
-        {/*Text*/}
-        {formattedDocument && (
-          <div className="flex flex-col gap-5">
-            {showWholeDocument && formattedDocument.beginning !== "" && (
-              <ReactMarkdown
-                className="prose max-w-prose md:prose-base sm:prose-sm p-3 prose-pre:bg-bg-alt-verba"
-                components={{
-                  code({ node, inline, className, children, ...props }) {
-                    const match = /language-(\w+)/.exec(className || "");
-                    return !inline && match ? (
-                      <SyntaxHighlighter
-                        style={
-                          settingConfig.Customization.settings.theme === "dark"
-                            ? (oneDark as any)
-                            : (oneLight as any)
-                        }
-                        language={match[1]}
-                        PreTag="div"
-                        {...props}
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code className={className} {...props}>
-                        {children}
-                      </code>
-                    );
-                  },
-                }}
-              >
-                {formattedDocument.beginning}
-              </ReactMarkdown>
-            )}
-            {formattedDocument.substring !== "" && (
-              <div
-                ref={chunkRef}
-                className=" border-secondary-verba border-2 rounded-lg shadow-lg flex gap-2 flex-col p-3"
-              >
-
-                <div className="">
-                  {{srcLink} ? (
-                    <iframe
-                      src={srcLink}
-                      title="Extracted Link"
-                      style={{ width: "100%", height: "100vh", border: "none" }}
-                    />
-                  ) : (
-                    <p>No link found.</p>
-                  )}
-                </div>
-                <ReactMarkdown
-                  className="prose md:prose-base sm:prose-sm p-3 prose-pre:bg-bg-alt-verba"
-                  components={{
-                    code({ node, inline, className, children, ...props }) {
-                      const match = /language-(\w+)/.exec(className || "");
-                      return !inline && match ? (
-                        <SyntaxHighlighter
-                          style={
-                            settingConfig.Customization.settings.theme ===
-                            "dark"
-                              ? (oneDark as any)
-                              : (oneLight as any)
-                          }
-                          language={match[1]}
-                          PreTag="div"
-                          {...props}
-                        >
-                          {String(children).replace(/\n$/, "")}
-                        </SyntaxHighlighter>
-                      ) : (
-                        <code className={className} {...props}>
-                          {children}
-                        </code>
-                      );
-                    },
-                  }}
-                >
-                  {formattedDocument.substring}
-                </ReactMarkdown>
-              </div>
-            )}
-            {showWholeDocument && formattedDocument.ending !== "" && (
-              <ReactMarkdown
-                className="prose md:prose-base sm:prose-sm p-3 prose-pre:bg-bg-alt-verba"
-                components={{
-                  code({ node, inline, className, children, ...props }) {
-                    const match = /language-(\w+)/.exec(className || "");
-                    return !inline && match ? (
-                      <SyntaxHighlighter
-                        style={
-                          settingConfig.Customization.settings.theme === "dark"
-                            ? (oneDark as any)
-                            : (oneLight as any)
-                        }
-                        language={match[1]}
-                        PreTag="div"
-                        {...props}
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code className={className} {...props}>
-                        {children}
-                      </code>
-                    );
-                  },
-                }}
-              >
-                {formattedDocument.ending}
-              </ReactMarkdown>
-            )}
-          </div>
-        )}
+        <div className="border border-secondary-verba">
+          {{ srcLink } ? (
+            <iframe
+              src={srcLink}
+              title="Extracted Link"
+              style={{ width: "100%", height: "100vh", border: "none" }}
+            />
+          ) : (
+            <p>No link found.</p>
+          )}
+        </div>
 
         <UserModalComponent
           modal_id="delete_document_modal"
