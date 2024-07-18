@@ -182,7 +182,7 @@ const DocumentComponent: React.FC<DocumentComponentProps> = ({
           </div>
         </div>
 
-        <div className="border border-secondary-verba">
+        <div className="border-2 border-secondary-verba">
           {{ srcLink } ? (
             <iframe
               src={srcLink}
