@@ -501,6 +501,7 @@ class VerbaManager:
         msg.info("Added query to suggestions")
 
     def retrieve_chunks(self, queries: list[str]) -> list[Chunk]:
+        print(f'queries:  {self.retriever_manager}')
         chunks, context = self.retriever_manager.retrieve(
             queries,
             self.client,
