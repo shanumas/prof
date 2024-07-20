@@ -4,7 +4,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import { IoMdSend } from "react-icons/io";
 import { DocumentChunk } from "../Document/types";
 import { Message, QueryPayload } from "./types";
-import { getWebSocketApiHost } from "./util";
+import {getWebSocketApiHost, preferenceCollected, storeMapInLocalStorage, getMapFromLocalStorage} from "./util";
 import ChatMessage from "./ChatMessage";
 import { SettingsConfiguration } from "../Settings/types";
 import { IoIosRefresh } from "react-icons/io";
@@ -313,6 +313,42 @@ const ChatInterfaceComponent: React.FC<ChatInterfaceComponentProps> = ({
 
     const sendInput = userInput;
 
+    if(getMapFromLocalStorage('metadataMap'))
+    {
+        //Metadata already extracted, continue finding matches
+    }
+    else{
+        const check = await preferenceCollected(sendInput);
+        const metadataMap = new Map();
+
+        //All info not collected
+        if(check.startsWith('true'))
+        {
+          check.startsWith('true')
+          // Split the string by commas and remove extra spaces
+          const values = check.split(',').map(value => value.trim());
+
+          // Destructure the array into individual constants
+          const [isTrue, type, min, max, beds, feet] = values;
+
+          metadataMap.set('isTrue', isTrue === 'true');
+          metadataMap.set('type', type);
+          metadataMap.set('min', parseInt(min, 10));
+          metadataMap.set('max', parseInt(max, 10));
+          metadataMap.set('beds', parseInt(beds, 10));
+          metadataMap.set('feet', parseInt(feet, 10));
+
+          storeMapInLocalStorage('metadataMap', metadataMap)
+
+        }
+        else if(check.startsWith('false')){
+          return;
+        }
+    }
+
+
+
+    //All info collected
     if (sendInput.trim()) {
       setMessages((prev) => [...prev, { type: "user", content: sendInput }]);
       setUserInput("");
